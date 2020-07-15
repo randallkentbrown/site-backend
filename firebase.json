@@ -1,0 +1,23 @@
+{
+  "hosting": {
+    "public": "public",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "/pages",
+        "function": "app"
+      }
+    ]
+  },
+  "functions": {
+    "predeploy": [],
+    "source": "functions"
+  },
+  "database": {
+    "rules": "./functions/src/database/database.rules.json"
+  }
+}
