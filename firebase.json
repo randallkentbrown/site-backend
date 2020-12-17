@@ -10,6 +10,9 @@
       {
         "source": "/pages",
         "function": "app"
+      }, {
+        "source": "/resume_uri",
+        "function": "app"
       }
     ]
   },
