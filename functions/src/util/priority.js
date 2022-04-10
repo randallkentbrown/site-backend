@@ -1,3 +1,5 @@
+const { isGcsTfliteModelOptions } = require("firebase-admin/lib/machine-learning/machine-learning-api-client");
+
 const processPages = (pages) => {
     const reducer = (visiblePages, pageData) => {
         if (pageData.visible) {
@@ -31,5 +33,30 @@ const processPages = (pages) => {
     return truePages;
 }
 
-exports.processPages = processPages;
+/**
+ * Returns true if list is a list and each element has a 'priority' field.
+ */
+const prioritized = (list) => {
+    let pri = true;
+    list.forEach((item) => {
+        if (item.priority == null) {
+            pri = false;
+        }
+    });
+    return pri;
+}
 
+/**
+ * Sorts a list of objects, assuming that they all have the "priority" field.
+ * @param list the list of objects to sort
+ */
+const priSort = (list) => {
+    if (!(prioritized(list))) {
+        return;
+    }
+    list.sort((first, second) => {
+        return first.priority - second.priority;
+    });
+}
+
+exports.prioritySort = priSort;
