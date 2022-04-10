@@ -19,28 +19,19 @@ const databaseElements = {
 }
 
 const data = {
-    directory: null,
     resumeURI: null
 };
 
 // handler for changes to the database elements (JSON children)
-siteDataTunnel.on('value', snap => { siteData = snap.val(); });
-databaseElements.directory().on('value', snap => { data.directory = snap.val(); });
+siteDataTunnel.on('value', snap => { siteData.data = snap.val(); });
 databaseElements.resumeURI().on('value', snap => { data.resumeURI = snap.val(); });
 
 // TODO: Refactor this to easily extend new database entries!
 
 const fetchSiteData = async () => {
-    const dataOnce = await siteData.once('value');
+    const dataOnce = await siteDataTunnel.once('value');
     if (dataOnce.exists()) {
         siteData.data = dataOnce.val();
-    }
-}
-
-const fetchDirectory = async () => {
-    const directoryOnce = await databaseElements.directory().once('value');
-    if(directoryOnce.exists()) {
-        data.directory = directoryOnce.val();
     }
 }
 
@@ -53,24 +44,17 @@ const fetchResumeURI = async () => {
 
 const getPages = async () => {
     if (!siteData.loaded) {
-        siteData.loaded = true;
         await fetchSiteData();
+        siteData.loaded = true;
     }
     if (siteData.data) {
-        if (!siteData.data.pages) {
-            return siteData.data;
+        if (siteData.data.pages) {
+            return siteData.data.pages;
         }
-        return siteData.data.pages;
+        return siteData.data;
     }
-    return null;
+    return [];
 }
-
-const getDirectory = async () => {
-    if (data.directory === null) {
-        await fetchDirectory();
-    }
-    return data.directory;
-};
 
 const getResumeURI = async () => {
     if (data.resumeURI === null) {
@@ -79,6 +63,6 @@ const getResumeURI = async () => {
     return data.resumeURI;
 }
 
-exports.getDirectory = getDirectory;
+exports.getDirectory = getPages;
 exports.getResumeURI = getResumeURI;
 exports.getPages = getPages;

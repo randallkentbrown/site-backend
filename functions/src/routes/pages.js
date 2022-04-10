@@ -1,9 +1,9 @@
 const database = require("../database/database.js");
-const processor = require("../util/page_prio.js").processPages;
+const prioritySort = require("../util/priority.js").prioritySort;
 
 // Deploy
 const pages = async (req, res) => {
-    if (req.query.new) {
+    if (!(req.query.legacy === true)) {
         let pages = await database.getPages();
         if (!pages) {
             pages = {
@@ -13,13 +13,11 @@ const pages = async (req, res) => {
                 }
             }
         }
+        pages = Object.values(pages);
         res.status(200).send(pages);
     } else {
-        var directory = await database.getDirectory();
-        if (!(req.query.obj === 'true')) {
-            directory = Object.values(directory);
-            directory = processor(directory);
-        }
+        let directory = Object.values(database.getPages());
+        prioritySort(directory);
         res.status(200).send(directory);
     }
 }

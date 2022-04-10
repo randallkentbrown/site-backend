@@ -1,5 +1,3 @@
-const { isGcsTfliteModelOptions } = require("firebase-admin/lib/machine-learning/machine-learning-api-client");
-
 const processPages = (pages) => {
     const reducer = (visiblePages, pageData) => {
         if (pageData.visible) {
